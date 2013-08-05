@@ -14,6 +14,11 @@ public class GameBoardController {
 	 */
 	private PlayerPlane myPlayer;
 	
+	/**
+	 * enemyPlayers represent a list of enemy players.
+	 */
+	private List<EnemyPlane> myEnemyPlayers;
+	
 	private Point playerLocation;
 	
 	private int myScale = 1;
@@ -37,7 +42,9 @@ public class GameBoardController {
 	/**
 	 * PLANE_REP is the string representation of the player plane.
 	 */
-	private static final String PLANE_REP = "S";
+	private static final String PLAYER_REP = "S";
+	
+	private static final String ENEMY_REP = "E";
 	
 	private static final int BOARD_HEIGHT = 20;
 	
@@ -56,10 +63,24 @@ public class GameBoardController {
 		//Construct a new player plane
 		myPlayer = new PlayerPlane(myScale);
 		
+		//Construct enemy plane
+		myEnemyPlayers = new ArrayList<EnemyPlane>();
+		for(int i = 2; i < 15; i+= 2)
+		{
+			myEnemyPlayers.add(new EnemyPlane(myScale, 1, i));
+		}
+		
+		
 		//Place the plane on the board
 		playerLocation = myPlayer.getCurrentLocation();
 		System.out.println(myPlayer.toString());
 		my_game_board[playerLocation.getX()][playerLocation.getY()] = 1;
+		
+		//Place enemy on the game board
+		for(EnemyPlane enemy : myEnemyPlayers)
+		{
+			my_game_board[enemy.getCurrentLocation().getX()][enemy.getCurrentLocation().getY()] = 10;
+		}
 	}
 	
 	private void updatePlayerLocation()
@@ -175,6 +196,39 @@ public class GameBoardController {
 		}
 	}
 	
+	/**
+	 * Check if any of the plane was hit, then update the graphics to display the newest result.
+	 * @return
+	 */
+	public boolean planeWasHit()
+	{
+		boolean wasHit = false;
+		List<Bullet> playerBullets = myPlayer.getBullets();
+		for(EnemyPlane enemyPlane : myEnemyPlayers)
+		{
+			//Each enemy plane have different bullets, check each bullet and take the damage
+			for(int bulletIndex = 0; bulletIndex < enemyPlane.getBullets().size(); bulletIndex++)
+			{
+				if(myPlayer.wasHit(enemyPlane.getBullets()))
+				{
+					myPlayer.takeDamage(enemyPlane.getBullets().get(bulletIndex).getDamage());
+				}
+			}
+			
+			//Each player have different bullets, check each bullets from player and take the damage to the enemy
+			for(int playerBulletIndex = 0; playerBulletIndex < playerBullets.size(); playerBulletIndex++)
+			{
+				if(enemyPlane.wasHit(playerBullets.get(playerBulletIndex)))
+				{
+					enemyPlane.takeDamage(playerBullets.get(playerBulletIndex).getDamage());
+				}
+			}
+		}
+		return wasHit;
+		
+	}
+	
+
 	public String toString()
 	{
 		StringBuilder theStringBuilder = new StringBuilder();	//Constructs the left side wall
@@ -189,11 +243,15 @@ public class GameBoardController {
 				}
 				else if(my_game_board[y][x] == 1)
 				{
-					theStringBuilder.append(PLANE_REP);
+					theStringBuilder.append(PLAYER_REP);
 				}
 				else if(my_game_board[y][x] == 2)
 				{
 					theStringBuilder.append(BULLET);
+				}
+				else if(my_game_board[y][x] == 10)
+				{
+					theStringBuilder.append(ENEMY_REP);
 				}
 			}
 			theStringBuilder.append("|");  //Constructs the right side wall

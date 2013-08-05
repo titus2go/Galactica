@@ -33,4 +33,12 @@ public class EnemyPlane extends AbstractGalacticaPlane{
 			  myFirePower, 
 			  new Point(DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE), the_scale, DEFAULT_DIRECTION);
 	}
+	
+	public EnemyPlane(final int the_scale, final int the_x_coordinate, final int the_y_coordinate)
+	{
+		super(myTotalHealth,
+			  myTotalLives,
+			  myFirePower,
+			  new Point(the_x_coordinate, the_y_coordinate), the_scale, DEFAULT_DIRECTION);
+	}
 }

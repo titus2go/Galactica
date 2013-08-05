@@ -7,6 +7,11 @@ public class PlayerPlane extends AbstractGalacticaPlane {
 	
 	private static int myFirePower = 10;
 	
+	/**
+	 * myInvincibility is the property that allow ships to take no damage, applicable only to player plane
+	 */
+	private boolean myInvincibility = false;
+	
 //	private static Point myCurrentLocation;
 	
 	private static int DEFAULT_Y_COORDINATE = 19;
@@ -28,6 +33,7 @@ public class PlayerPlane extends AbstractGalacticaPlane {
 		myCurrentYCoord = DEFAULT_Y_COORDINATE;
 	}
 	
+	
 	/**
 	 * @override 
 	 */
@@ -37,6 +43,32 @@ public class PlayerPlane extends AbstractGalacticaPlane {
 		super.setPlaneCoordinate(myCurrentYCoord, myCurrentXCoord);
 	}
 	
+	public void turnOnInvincibility()
+	{
+		myInvincibility = true;
+	}
+	
+	public void turnOffInvincibility()
+	{
+		myInvincibility = false;
+	}
+	
+	public void takeDamage(final int damageCount)
+	{
+		if(myInvincibility)
+		{
+			super.takeDamage(0);
+		}
+		else
+		{
+			super.takeDamage(damageCount);
+		}
+	}
+	
+	public boolean isInvincible()
+	{
+		return myInvincibility;
+	}
 	public void moveRight()
 	{
 		myCurrentXCoord += super.getScale();

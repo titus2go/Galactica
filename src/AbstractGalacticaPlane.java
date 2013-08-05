@@ -1,20 +1,29 @@
+/*
+ * Developers:  Titus, Mike
+ * AbstractGalacticaPlane class
+ * This class is designed to be a generic class for both the player and the enemy.
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class AbstractGalacticaPlane {
 	/*
-	 * myTotalHealth is the total health that the plane has.
+	 * myTotalHealth is the maximum health the plane has.
+	 * This variable depends on the level of the plane.
 	 */
 	private int myTotalHealth;
 	
 	/*
-	 * myTotalLives
+	 * myTotalLives is the life count of each plane.
+	 * myTotalLives will reduce when myTotalHealth is 0.
 	 */
 	private int myTotalLives;
 	
 	/*
 	 * myHealthCount is the health that is left of the plane.
+	 * It is reduced after taking damage.
 	 */
 	private int myHealthCount;
 	
@@ -22,6 +31,7 @@ public class AbstractGalacticaPlane {
 	 * myFirePower is essentially the damage count for each bullet
 	 */
 	private int myFirePower;
+	
 	
 	/**
 	 * isAlive is true only when myTotalLives > 0.
@@ -34,18 +44,19 @@ public class AbstractGalacticaPlane {
 	private int myScale = 1;
 	
 	
+	
 	/**
-	 * myBulletsCoordinates provides the coordinates of the planes bullets.
+	 * myBullets provides the bullet information of the plane's bullets.
 	 */
-	private List<Bullet> myBulletsCoordinates;
+	private List<Bullet> myBullets;
 	
 	/**
 	 * myCurrentCoordinate provides the coordinate of the plane's current location.
 	 */
 	private Point myCurrentCoordinate;
 	
-	/*
-	 * myDirection provides the direction in which the plane is facing and shooting
+	/**
+	 * myDirection provides the direction in which the plane is facing and shooting.
 	 */
 	private int myDirection;
 	
@@ -63,37 +74,62 @@ public class AbstractGalacticaPlane {
 		isAlive = true;
 		myCurrentCoordinate = currentCoordinate;
 		myScale = scale;
-		myBulletsCoordinates = new ArrayList<Bullet>();
+		myBullets = new ArrayList<Bullet>();
 		myDirection = direction;
 			
 	}
 	
+	/**
+	 * getScale() returns the speed of the bullet
+	 * @return int myScale
+	 */
 	protected int getScale()
 	{
 		return myScale;
 	}
 	
+	/**
+	 * moveLeft() moves the plane to its left.
+	 * Note: Enemy and player both have different orientation.
+	 */
 	public void moveLeft()
 	{
 		myCurrentCoordinate = new Point(myCurrentCoordinate.getX() - myScale, myCurrentCoordinate.getY());
 	}
 	
+	/**
+	 * moveRight() moves the plane to its right.
+	 * Note: Enemy and player both have different orientation.
+	 */
 	public void moveRight()
 	{
 		myCurrentCoordinate = new Point(myCurrentCoordinate.getX() + myScale, myCurrentCoordinate.getY());
 	}
 	
+	
+	/**
+	 * moveUp() moves the plane to its upward position
+	 * Note: Enemy and player both have different orientation.
+	 */
 	public void moveUp()
 	{
 		myCurrentCoordinate = new Point(myCurrentCoordinate.getX(), myCurrentCoordinate.getY() - myScale);
 	}
 	
+	/**
+	 * moveDown() moves the plane to its downward position
+	 * Note: Enemy and player both have different orientation.
+	 */
 	public void moveDown()
 	{
 		myCurrentCoordinate = new Point(myCurrentCoordinate.getX(), myCurrentCoordinate.getY() + myScale);
 		
 	}
 	
+	/**
+	 * getHealthCount() returns the current health the plane has i.e 245/500 -> 245
+	 * @return int myHealthCount
+	 */
 	public int getHealthCount()
 	{
 		return myHealthCount;
@@ -108,6 +144,10 @@ public class AbstractGalacticaPlane {
 	}
 	
 	
+	/**
+	 * takeDamge() allows the plane to take a certain amount of damage from enemyBullets.
+	 * @param damageCount
+	 */
 	public void takeDamage(int damageCount)
 	{
 		if(myHealthCount == damageCount || myHealthCount < damageCount)
@@ -126,26 +166,30 @@ public class AbstractGalacticaPlane {
 			myHealthCount -= damageCount;
 		}
 	}
+	
 	/**
-	 * Check whether the plane was hit using coordinates
+	 * Check whether the plane was hit with a list of enemy bullets
 	 * @param other_coordinate
 	 * @return boolean value
 	 */
-	public boolean wasHit(Point other_coordinate)
+	public boolean wasHit(List<Bullet> enemyBullets)
 	{	
 		boolean plane_was_hit = false;
-		if(myCurrentCoordinate.getX() == other_coordinate.getX() 
-				&& myCurrentCoordinate.getY() == other_coordinate.getY())
+		for(Bullet enemyBullet : enemyBullets)
 		{
-			plane_was_hit = true;
+			if(myCurrentCoordinate.getX() == enemyBullet.getCoordinate().getX() 
+					&& myCurrentCoordinate.getY() == enemyBullet.getCoordinate().getY())
+			{
+				plane_was_hit = true;
+			}
 		}
 		return plane_was_hit;
 	}
 	
 	/**
-	 * Check whether the plane was hit using Bullet class
+	 * Check whether the plane was hit with an enemy bullet.
 	 * @param enemy_bullet
-	 * @return boolean value
+	 * @return boolean plane_was_hit
 	 */
 	public boolean wasHit(Bullet enemy_bullet)
 	{
@@ -159,13 +203,13 @@ public class AbstractGalacticaPlane {
 	}
 	
 	/**
-	 * shoot() loads one bullet
+	 * shoot() loads one bullet.
 	 */
 	public void shoot()
 	{
 		Point my_location = new Point(myCurrentCoordinate.getX(), myCurrentCoordinate.getY());
 		Bullet new_bullet = new Bullet(my_location, myFirePower, myDirection);
-		myBulletsCoordinates.add(new_bullet);
+		myBullets.add(new_bullet);
 	}
 	
 	
@@ -174,35 +218,48 @@ public class AbstractGalacticaPlane {
 	 */
 	public void updateBulletsCoordinates()
 	{
-		for (int i = 0; i < myBulletsCoordinates.size(); i++)
+		for (int i = 0; i < myBullets.size(); i++)
 		{
-			Bullet this_bullet_location = myBulletsCoordinates.get(i);
+			Bullet this_bullet_location = myBullets.get(i);
 			this_bullet_location.updateBullet(myScale);
 		}
 	}
 	
+	/**
+	 * Removes the targeted bullet from the plane's bullet list.
+	 * @param index
+	 */
 	public void removeBulletFromPath(final int index)
 	{
-		myBulletsCoordinates.remove(index);
+		myBullets.remove(index);
 	}
 	
+//	/**
+//	 * 
+//	 * @return the location of all the bullets the plane shot
+//	 */
+//	public List<Point> getBulletsCoordinates()
+//	{
+//		List<Point> bullets_coordinates = new ArrayList<Point>();
+//		for(int i = 0; i < myBullets.size(); i++)
+//		{
+//			bullets_coordinates.add(myBullets.get(i).getCoordinate());
+//		}
+//		return bullets_coordinates;
+//	}
+	
 	/**
-	 * 
-	 * @return the location of all the bullets the plane shot
+	 * Returns a list of bullets from the plane.
+	 * @return Bullet myBullets
 	 */
-	public List<Point> getBulletsCoordinates()
+	public List<Bullet> getBullets()
 	{
-		List<Point> bullets_coordinates = new ArrayList<Point>();
-		for(int i = 0; i < myBulletsCoordinates.size(); i++)
-		{
-			bullets_coordinates.add(myBulletsCoordinates.get(i).getCoordinate());
-		}
-		return bullets_coordinates;
+		return myBullets;
 	}
 	
 	/**
-	 * 
-	 * @return the plane's current location.
+	 * Report back the plane's current coordinate.
+	 * @return Point myCurrentCoordinate
 	 */
 	public Point getCurrentLocation()
 	{
@@ -210,13 +267,18 @@ public class AbstractGalacticaPlane {
 	}
 	
 	/**
-	 * @return boolean value indicating if the plane is alive or not.
+	 * Returns the value that indicates whether the plane is alive.
+	 * @return boolean isAlive
 	 */
 	public boolean isAlive()
 	{
 		return isAlive;
 	}
 	
+	/**
+	 * Returns a representation of AbstractGalactica in string format.
+	 * @return String myRepresentation
+	 */
 	public String toString()
 	{
 		StringBuilder myRepresentation = new StringBuilder();
