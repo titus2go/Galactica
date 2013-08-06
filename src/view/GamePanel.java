@@ -48,9 +48,9 @@ public class GamePanel extends JPanel implements Observer
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
 
-		my_board = new GameBoardController(WIDTH, HEIGHT, PLANE_SIZE);
+//		my_board = new GameBoardController(WIDTH, HEIGHT, PLANE_SIZE);
 
-		my_bullet = new Bullet(new Point(p_x, p_y), 10, BulletType.PLAYER_BULLET);	
+	//	my_bullet = new Bullet(new Point(p_x, p_y), 10, BulletType.PLAYER_BULLET);	
 		my_key = new KeyControl(my_board, this);
 		addKeyListener(my_key);
 		setFocusable(true);

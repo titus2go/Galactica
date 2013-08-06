@@ -13,7 +13,7 @@ public class GameBoardController {
 	/**
 	 * my_game_board is a 2D array representing the coordinates on the board
 	 */
-	private int[][] my_game_board;
+//	private int[][] my_game_board;
 	
 	/**
 	 * myPlayer represents the current player.
