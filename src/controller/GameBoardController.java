@@ -1,5 +1,11 @@
+package controller;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Bullet;
+import model.EnemyPlane;
+import model.PlayerPlane;
+import model.Point;
 
 
 public class GameBoardController {
@@ -13,6 +19,10 @@ public class GameBoardController {
 	 * myPlayer represents the current player.
 	 */
 	private PlayerPlane myPlayer;
+	
+	private EnemyPlane[] enemies = new EnemyPlane[4];
+	
+	private List<Bullet> fired_bullets = new ArrayList<Bullet>();
 	
 	/**
 	 * enemyPlayers represent a list of enemy players.
@@ -168,6 +178,13 @@ public class GameBoardController {
 		myPlayer.shoot();
 	}
 	
+	public void shoot()
+	{
+		fired_bullets.add(new Bullet(new Point(myPlayer.getCurrentLocation().getX() + my_plane_size /2, 
+				myPlayer.getCurrentLocation().getY()), 1, BulletType.PLAYER_BULLET));
+
+	}
+	
 	public void updatePlayerBulletLocation()
 	{
 //		//Remove old bullet path
@@ -226,6 +243,30 @@ public class GameBoardController {
 		}
 		return wasHit;
 		
+	}
+	
+	public List<Bullet> firedBullets()
+	{		
+
+		return fired_bullets;
+	}
+	
+	/**
+	 * Generate enemy planes
+	 */
+	public EnemyPlane[] enemyPlane()
+	{
+		for(int i = 0; i < enemies.length; i++)
+		{
+			enemies[i] = new EnemyPlane(my_plane_size * i, 2 * my_plane_size, this);
+		}
+
+		return enemies;
+	}
+	
+	public EnemyPlane getEnemy()
+	{
+		return enemy_test;
 	}
 	
 

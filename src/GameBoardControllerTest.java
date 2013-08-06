@@ -1,3 +1,5 @@
+import controller.GameBoardController;
+
 
 public class GameBoardControllerTest {
 	

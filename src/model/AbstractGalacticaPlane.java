@@ -1,3 +1,4 @@
+package model;
 /*
  * Developers:  Titus, Mike
  * AbstractGalacticaPlane class

@@ -1,3 +1,5 @@
+package model;
+
 
 public class EnemyPlane extends AbstractGalacticaPlane{
 	
