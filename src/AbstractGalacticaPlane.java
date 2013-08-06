@@ -234,19 +234,19 @@ public class AbstractGalacticaPlane {
 		myBullets.remove(index);
 	}
 	
-//	/**
-//	 * 
-//	 * @return the location of all the bullets the plane shot
-//	 */
-//	public List<Point> getBulletsCoordinates()
-//	{
-//		List<Point> bullets_coordinates = new ArrayList<Point>();
-//		for(int i = 0; i < myBullets.size(); i++)
-//		{
-//			bullets_coordinates.add(myBullets.get(i).getCoordinate());
-//		}
-//		return bullets_coordinates;
-//	}
+	/**
+	 * 
+	 * @return the location of all the bullets the plane shot
+	 */
+	public List<Point> getBulletsCoordinates()
+	{
+		List<Point> bullets_coordinates = new ArrayList<Point>();
+		for(int i = 0; i < myBullets.size(); i++)
+		{
+			bullets_coordinates.add(myBullets.get(i).getCoordinate());
+		}
+		return bullets_coordinates;
+	}
 	
 	/**
 	 * Returns a list of bullets from the plane.
